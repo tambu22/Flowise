@@ -99,8 +99,6 @@ class Git_DocumentLoaders implements INode {
     }
 
     async init(nodeData: INodeData, _: string, options: ICommonObject): Promise<any> {
-        console.log('Node Data:', nodeData);
-
         const repoUrl = nodeData.inputs?.repoCloneUrl as string
         const branch = nodeData.inputs?.branch as string
         const localPath = `${nodeData.inputs?.localPath as string}/${repoUrl.split('/').pop()}`
@@ -132,8 +130,6 @@ class Git_DocumentLoaders implements INode {
             gitAuth = `GIT_SSH_COMMAND="ssh -i ${sshKeyPath} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no" `
         }
 
-        console.log({ repoUrl, branch, localPath, textSplitter, metadata, _omitMetadataKeys, accessToken });
-
         let omitMetadataKeys: string[] = []
         if (_omitMetadataKeys) {
             omitMetadataKeys = _omitMetadataKeys.split(',').map((key) => key.trim())
@@ -158,7 +154,6 @@ class Git_DocumentLoaders implements INode {
         })
 
         let processedDocs = docs
-        console.log(' Docs:', docs.length);
         if (textSplitter) {
             processedDocs = await textSplitter.splitDocuments(docs)
         }
@@ -169,7 +164,6 @@ class Git_DocumentLoaders implements INode {
                 ? {}
                 : omit(doc.metadata, omitMetadataKeys)
         }))
-        console.log('Processed Docs:', processedDocs.length);
 
         return processedDocs
     }
